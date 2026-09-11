@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Toolkit Index — CTF Reference</title>
+<style>
+  :root{
+    --paper: #f6f3ea;
+    --paper-2: #efeadb;
+    --ink: #1f1b16;
+    --ink-soft: #5c564a;
+    --rule: #cdc4ac;
+    --red: #a13d2b;
+    --red-soft: #c2694f;
+    --tab-bg: #e7e0cb;
+    --serif: 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+    --mono: 'Courier New', ui-monospace, monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    background-image:
+      linear-gradient(var(--paper) 0%, var(--paper) 100%);
+    color:var(--ink);
+    font-family:var(--serif);
+    line-height:1.5;
+    min-height:100vh;
+  }
+
+  .frame{
+    display:grid;
+    grid-template-columns: 230px 1fr;
+    min-height:100vh;
+    max-width:1180px;
+    margin:0 auto;
+    border-left:1px solid var(--rule);
+    border-right:1px solid var(--rule);
+  }
+
+  /* ---- Sidebar: card-catalog drawer labels ---- */
+  aside{
+    background:var(--paper-2);
+    border-right:1px solid var(--rule);
+    padding:28px 0 40px;
+    position:sticky;
+    top:0;
+    align-self:start;
+    height:100vh;
+    overflow-y:auto;
+  }
+  .brand{
+    padding:0 20px 20px;
+    border-bottom:1px solid var(--rule);
+    margin-bottom:6px;
+  }
+  .brand .stamp{
+    display:inline-block;
+    font-family:var(--mono);
+    font-size:10.5px;
+    letter-spacing:0.06em;
+    color:var(--red);
+    border:1px solid var(--red-soft);
+    padding:2px 6px;
+    margin-bottom:10px;
+    transform:rotate(-1.2deg);
+  }
+  .brand h1{
+    font-size:20px;
+    margin:0 0 4px;
+    font-weight:600;
+  }
+  .brand p{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin:0;
+  }
+
+  nav.drawers{padding-top:6px;}
+  .drawer{
+    display:block;
+    width:100%;
+    text-align:left;
+    background:none;
+    border:none;
+    border-bottom:1px solid var(--rule);
+    padding:11px 20px;
+    font-family:var(--serif);
+    font-size:14px;
+    color:var(--ink);
+    cursor:pointer;
+  }
+  .drawer .count{
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--ink-soft);
+    float:right;
+  }
+  .drawer:hover{background:var(--tab-bg);}
+  .drawer.active{
+    background:var(--ink);
+    color:var(--paper);
+    font-weight:600;
+  }
+  .drawer.active .count{color:var(--paper-2);}
+
+  /* ---- Main area ---- */
+  main{padding:34px 40px 80px;}
+
+  .search-row{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:20px;
+    border-bottom:2px solid var(--ink);
+    padding-bottom:10px;
+    margin-bottom:26px;
+    flex-wrap:wrap;
+  }
+  .search-row h2{
+    font-size:22px;
+    margin:0;
+  }
+  .search-row .role{
+    font-size:13px;
+    color:var(--ink-soft);
+    font-style:italic;
+  }
+  #search{
+    font-family:var(--mono);
+    font-size:13px;
+    background:transparent;
+    border:none;
+    border-bottom:1px solid var(--rule);
+    color:var(--ink);
+    padding:6px 2px;
+    min-width:220px;
+    outline:none;
+  }
+  #search:focus{border-color:var(--red);}
+  #search::placeholder{color:var(--ink-soft);}
+
+  /* ---- Index cards ---- */
+  .cardlist{display:flex;flex-direction:column;}
+  .index-card{
+    display:grid;
+    grid-template-columns: 30px 1fr auto;
+    gap:16px;
+    align-items:start;
+    padding:16px 4px;
+    border-bottom:1px dashed var(--rule);
+  }
+  .index-card .num{
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--ink-soft);
+    padding-top:3px;
+  }
+  .index-card h3{
+    font-size:16px;
+    margin:0 0 4px;
+    display:inline;
+  }
+  .index-card .cat-tag{
+    font-family:var(--mono);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:var(--red);
+    border:1px solid var(--red-soft);
+    padding:1px 5px;
+    margin-left:8px;
+    vertical-align:middle;
+  }
+  .index-card p{
+    font-size:13.5px;
+    color:var(--ink-soft);
+    margin:4px 0 0;
+    max-width:62ch;
+  }
+  .index-card a.go{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--ink);
+    text-decoration:none;
+    border-bottom:1px solid var(--ink);
+    white-space:nowrap;
+    padding-top:4px;
+  }
+  .index-card a.go:hover{color:var(--red);border-color:var(--red);}
+
+  .empty{
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--ink-soft);
+    padding:30px 4px;
+  }
+
+  footer{
+    margin-top:40px;
+    padding-top:14px;
+    border-top:1px solid var(--rule);
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--ink-soft);
+  }
+
+  @media (max-width: 760px){
+    .frame{grid-template-columns:1fr;}
+    aside{position:static;height:auto;border-right:none;border-bottom:1px solid var(--rule);}
+    nav.drawers{display:flex;flex-wrap:wrap;}
+    .drawer{width:auto;border-bottom:none;border:1px solid var(--rule);margin:4px;}
+    .index-card{grid-template-columns: 24px 1fr;}
+    .index-card a.go{grid-column:1 / -1;}
+  }
+</style>
+</head>
+<body>
+<div class="frame">
+
+  <aside>
+    <div class="brand">
+      <span class="stamp">ref. no. 001</span>
+      <h1>The Toolkit Index</h1>
+      <p>A card catalog of CTF tools, sorted by category, with a line to the source.</p>
+    </div>
+    <nav class="drawers" id="drawers"></nav>
+  </aside>
+
+  <main>
+    <div class="search-row">
+      <div>
+        <h2 id="section-title">All entries</h2>
+        <div class="role" id="section-role">every tool in the index</div>
+      </div>
+      <input id="search" type="text" placeholder="search the catalog…">
+    </div>
+
+    <div class="cardlist" id="cardlist"></div>
+
+    <footer>compiled from public documentation · every link goes to the tool's official page or repository · for lawful, authorized CTF and lab use</footer>
+  </main>
+
+</div>
+
+<script>
+const DATA = [
+  {
+    key: "general", title: "General setup", role: "the base toolkit before you specialize",
+    tools: [
+      {n:"Python 3 + pwntools", d:"Scripting automates repetitive exploitation and parsing; pwntools wraps common pwn/networking boilerplate.", u:"https://docs.pwntools.com/en/stable/install.html"},
+      {n:"VS Code", d:"General editor for writing solve scripts, with extensions for hex viewing and remote debugging.", u:"https://code.visualstudio.com/download"},
+      {n:"tmux", d:"Terminal multiplexer — keeps multiple shells (listener, script, notes) open in one window during a timed round.", u:"https://github.com/tmux/tmux/wiki/Installing"},
+      {n:"netcat / socat", d:"Raw TCP/UDP clients for talking directly to a challenge's remote service — the plumbing behind almost every category.", u:"https://nmap.org/ncat/"},
+      {n:"CTFd", d:"Open-source platform for running or practicing on self-hosted CTF competitions.", u:"https://ctfd.io/"},
+      {n:"CTFtime", d:"Calendar and rating tracker for upcoming and past CTF competitions worldwide.", u:"https://ctftime.org/"},
+      {n:"jq", d:"Command-line JSON processor — parses and filters API responses and config dumps quickly.", u:"https://jqlang.org/download/"},
+      {n:"Docker", d:"Runs challenge environments and vulnerable targets in isolated containers without polluting your host.", u:"https://www.docker.com/products/docker-desktop/"},
+      {n:"VirtualBox", d:"Free virtualization software for running Kali, Windows targets, or malware analysis VMs safely.", u:"https://www.virtualbox.org/wiki/Downloads"},
+      {n:"Cyberchef Server", d:"Self-hostable version of CyberChef for teams that want it offline or on a local network.", u:"https://github.com/gchq/CyberChef-server"}
+    ]
+  },
+  {
+    key: "distro", title: "Security-focused OS distros", role: "environments with most tooling preinstalled",
+    tools: [
+      {n:"Kali Linux", d:"Debian-based distro that ships most CTF tooling preinstalled — the default environment for most competitors.", u:"https://www.kali.org/get-kali/"},
+      {n:"Parrot Security OS", d:"Debian-based alternative to Kali with a lighter footprint and a similar preloaded toolset.", u:"https://www.parrotsec.org/download/"},
+      {n:"BlackArch Linux", d:"Arch-based distro with one of the largest repositories of security tools, installable as an overlay.", u:"https://www.blackarch.org/downloads.html"},
+      {n:"REMnux", d:"Ubuntu-based toolkit specifically for malware analysis and reverse engineering.", u:"https://remnux.org/"},
+      {n:"FLARE-VM", d:"Windows-based reverse engineering and malware analysis environment maintained by Mandiant.", u:"https://github.com/mandiant/flare-vm"},
+      {n:"Pentoo", d:"Gentoo-based live CD focused on penetration testing and security assessment.", u:"https://www.pentoo.ch/download/"},
+      {n:"CSI Linux", d:"Distro purpose-built for digital forensics and OSINT investigations.", u:"https://csilinux.com/"}
+    ]
+  },
+  {
+    key: "web", title: "Web exploitation", role: "the most beginner-friendly category",
+    tools: [
+      {n:"Burp Suite Community", d:"Industry-standard intercepting proxy for inspecting and modifying HTTP requests: proxy, repeater, intruder, decoder.", u:"https://portswigger.net/burp/communitydownload"},
+      {n:"OWASP ZAP", d:"Free, open-source alternative to Burp with automated scanning and a similar proxy workflow.", u:"https://www.zaproxy.org/download/"},
+      {n:"sqlmap", d:"Automates detection and exploitation of SQL injection flaws across many database backends.", u:"https://github.com/sqlmapproject/sqlmap"},
+      {n:"ffuf", d:"Fast Go-based fuzzer for directories, parameters, and virtual hosts.", u:"https://github.com/ffuf/ffuf"},
+      {n:"gobuster", d:"Directory, DNS, and vhost brute-forcer written in Go, popular for its speed.", u:"https://github.com/OJ/gobuster"},
+      {n:"DirBuster", d:"Classic OWASP Java tool for brute-forcing directories and file names on web/app servers.", u:"https://sourceforge.net/projects/dirbuster/"},
+      {n:"Commix", d:"Automated tool for detecting and exploiting OS command injection vulnerabilities.", u:"https://github.com/commixproject/commix"},
+      {n:"XSSer", d:"Automated cross-site scripting (XSS) detection and exploitation framework.", u:"https://github.com/epsylon/xsser"},
+      {n:"WPScan", d:"WordPress-specific vulnerability scanner for plugins, themes, and misconfigurations.", u:"https://github.com/wpscanteam/wpscan"},
+      {n:"fimap", d:"Finds and exploits local/remote file-inclusion (LFI/RFI) bugs in web apps.", u:"https://github.com/kurobeats/fimap"},
+      {n:"Hackbar", d:"Browser extension that speeds up manual payload testing directly in the URL/request bar.", u:"https://addons.mozilla.org/en-US/firefox/addon/hackbartool/"},
+      {n:"Postman", d:"GUI client for constructing, saving, and replaying API requests during a web challenge.", u:"https://www.postman.com/downloads/"},
+      {n:"Browser DevTools", d:"Inspect client-side JS, cookies, and network traffic directly — usually the first stop on a web challenge.", u:"https://developer.chrome.com/docs/devtools/"},
+      {n:"Nikto", d:"Web server scanner that checks for outdated software, dangerous files, and common misconfigurations.", u:"https://github.com/sullo/nikto"},
+      {n:"tplmap", d:"Detects and exploits server-side template injection (SSTI) vulnerabilities across many template engines.", u:"https://github.com/epinna/tplmap"},
+      {n:"JWT_Tool", d:"Tests and forges JSON Web Tokens — cracking weak secrets, altering claims, and probing signature bypasses.", u:"https://github.com/ticarpi/jwt_tool"},
+      {n:"NoSQLMap", d:"Automates detection and exploitation of NoSQL injection, mainly for MongoDB-backed apps.", u:"https://github.com/codingo/NoSQLMap"},
+      {n:"XXEinjector", d:"Automates exploitation of XML External Entity (XXE) vulnerabilities for file disclosure and SSRF.", u:"https://github.com/enjoiz/XXEinjector"}
+    ]
+  },
+  {
+    key: "crypto", title: "Cryptography", role: "breaking codes, ciphers, and weak implementations",
+    tools: [
+      {n:"CyberChef", d:"Browser-based 'cyber Swiss army knife' for chaining encodings, hashes, and cipher operations with no code.", u:"https://gchq.github.io/CyberChef/"},
+      {n:"pycryptodome", d:"Python library implementing standard crypto primitives — used to script attacks on custom or misused cryptosystems.", u:"https://pypi.org/project/pycryptodome/"},
+      {n:"RsaCtfTool", d:"Automates common RSA attacks (weak keys, factoring, known vulnerable moduli) against CTF-style RSA challenges.", u:"https://github.com/RsaCtfTool/RsaCtfTool"},
+      {n:"hashcat", d:"GPU-accelerated password and hash cracking tool supporting hundreds of hash types.", u:"https://hashcat.net/hashcat/"},
+      {n:"John the Ripper", d:"CPU-based password cracker with strong support for cracking modes and custom rules.", u:"https://www.openwall.com/john/"},
+      {n:"hash-identifier / hashid", d:"Identifies the likely hash type of a given string so you know what to feed a cracker.", u:"https://github.com/psypanda/hashID"},
+      {n:"FeatherDuster", d:"Automated cryptanalysis tool that flags weaknesses in a suspected crypto implementation.", u:"https://github.com/nccgroup/featherduster"},
+      {n:"SageMath", d:"Full mathematics system used for the number theory behind lattice, RSA, and elliptic-curve attacks.", u:"https://www.sagemath.org/download.html"},
+      {n:"xortool", d:"Guesses XOR key length and content for XOR-encoded ciphertext.", u:"https://github.com/hellman/xortool"},
+      {n:"CrackStation / online rainbow tables", d:"Looks up common hashes against large precomputed wordlists — a fast first check before brute-forcing.", u:"https://crackstation.net/"},
+      {n:"dCode", d:"Large library of solvers for classical ciphers (Caesar, Vigenère, Playfair, and dozens more).", u:"https://www.dcode.fr/"}
+    ]
+  },
+  {
+    key: "forensics", title: "Forensics & steganography", role: "finding evidence hidden in files, images, and traffic",
+    tools: [
+      {n:"Wireshark", d:"Network packet analyzer for inspecting .pcap captures — the default tool for network forensics challenges.", u:"https://www.wireshark.org/download.html"},
+      {n:"Autopsy", d:"End-to-end digital forensics platform for examining disk images, file systems, and deleted data.", u:"https://www.autopsy.com/download/"},
+      {n:"Volatility 3", d:"Memory forensics framework for analyzing RAM dumps — recovering processes, keys, and artifacts.", u:"https://github.com/volatilityfoundation/volatility3"},
+      {n:"binwalk", d:"Scans binary/firmware files for embedded, hidden, or compressed data — a first move on any suspicious file.", u:"https://github.com/ReFirmLabs/binwalk"},
+      {n:"ExifTool", d:"Reads, writes, and edits hidden metadata in images, documents, and media files.", u:"https://exiftool.org/"},
+      {n:"Steghide", d:"Hides and extracts data embedded inside image and audio files via steganography.", u:"http://steghide.sourceforge.net/"},
+      {n:"StegSolve", d:"Java GUI for applying steganography analysis techniques (bit planes, filters) to images.", u:"https://github.com/Giotino/stegsolve"},
+      {n:"Foremost", d:"Carves files out of disk images or raw data based on headers, footers, and internal structures.", u:"http://foremost.sourceforge.net/"},
+      {n:"bulk_extractor", d:"High-performance forensic tool that scans raw data for emails, URLs, and other artifacts without parsing the file system.", u:"https://github.com/simsong/bulk_extractor"},
+      {n:"NirSoft utilities", d:"Collection of small Windows forensic utilities (cache viewers, password recovery, browser history).", u:"https://www.nirsoft.net/"},
+      {n:"zsteg", d:"Detects hidden data specifically in PNG and BMP files, catching LSB steganography other tools miss.", u:"https://github.com/zed-0xff/zsteg"},
+      {n:"NetworkMiner", d:"Passive network forensics tool that reconstructs files, credentials, and sessions straight from a pcap.", u:"https://www.netresec.com/?page=NetworkMiner"},
+      {n:"Sleuth Kit", d:"Command-line library of forensic tools that Autopsy is built on top of — useful for scripting analysis.", u:"https://www.sleuthkit.org/sleuthkit/download.php"},
+      {n:"PhotoRec / TestDisk", d:"Free file-recovery and partition-repair tools, useful for pulling deleted data off disk images.", u:"https://www.cgsecurity.org/wiki/PhotoRec"}
+    ]
+  },
+  {
+    key: "rev", title: "Reverse engineering", role: "understanding what a compiled program actually does",
+    tools: [
+      {n:"Ghidra", d:"Free, NSA-developed disassembler and decompiler suite — the standard starting point for RE challenges.", u:"https://ghidra-sre.org/"},
+      {n:"IDA Free", d:"Long-standing disassembler with a free tier; still widely used alongside or instead of Ghidra.", u:"https://hex-rays.com/ida-free/"},
+      {n:"radare2", d:"Open-source, scriptable reverse engineering framework for disassembly, debugging, and binary analysis.", u:"https://github.com/radareorg/radare2"},
+      {n:"Cutter", d:"Graphical front end built on radare2/rizin, for people who prefer a GUI over the r2 shell.", u:"https://cutter.re/downloads/"},
+      {n:"GDB", d:"The standard Linux debugger, used to step through and inspect running or crashing binaries.", u:"https://www.gnu.org/software/gdb/download/"},
+      {n:"pwndbg", d:"GDB plugin adding CTF-focused conveniences: memory maps, heap inspection, exploit helpers.", u:"https://github.com/pwndbg/pwndbg"},
+      {n:"GEF", d:"Alternative GDB plugin with a similar goal to pwndbg — enhanced exploit-dev features.", u:"https://github.com/hugsy/gef"},
+      {n:"x64dbg", d:"Open-source user-mode debugger for Windows binaries, popular for RE on the Windows platform.", u:"https://x64dbg.com/"},
+      {n:"dnSpy / ILSpy", d:".NET assembly decompilers/debuggers for reversing C#/.NET binaries.", u:"https://github.com/dnSpyEx/dnSpy"},
+      {n:"jadx", d:"Decompiles Android APK/DEX files back into readable Java source for mobile RE challenges.", u:"https://github.com/skylot/jadx"},
+      {n:"Binary Ninja", d:"Commercial (with a free-tier community edition) disassembler known for its clean API and fast analysis.", u:"https://binary.ninja/free/"},
+      {n:"strace / ltrace", d:"Trace system calls or library calls a running program makes — quick insight without full disassembly.", u:"https://strace.io/"},
+      {n:"Frida", d:"Dynamic instrumentation toolkit for hooking and modifying running processes, including on mobile.", u:"https://frida.re/"},
+      {n:"PIN / DynamoRIO", d:"Dynamic binary instrumentation frameworks used for tracing and unpacking obfuscated binaries.", u:"https://www.intel.com/content/www/us/en/developer/articles/tool/pin-a-dynamic-binary-instrumentation-tool.html"}
+    ]
+  },
+  {
+    key: "pwn", title: "Binary exploitation (pwn)", role: "the advanced end — memory corruption and exploit dev",
+    tools: [
+      {n:"pwntools", d:"Python exploit-development framework: crafting payloads, talking to remote services, automating exploits.", u:"https://github.com/Gallopsled/pwntools"},
+      {n:"pwninit", d:"Automates the boring setup of a pwn challenge — patches the binary and fetches the right libc.", u:"https://github.com/io12/pwninit"},
+      {n:"checksec.sh", d:"Quickly reports which binary protections (NX, ASLR, canaries, PIE, RELRO) are enabled on a target.", u:"https://github.com/slimm609/checksec.sh"},
+      {n:"ROPgadget", d:"Finds usable gadgets in a binary for building return-oriented-programming exploit chains.", u:"https://github.com/JonathanSalwan/ROPgadget"},
+      {n:"Ropper", d:"Alternative ROP-gadget finder that also displays general binary/file-format info.", u:"https://github.com/sashs/Ropper"},
+      {n:"one_gadget", d:"Finds single-instruction 'one shot' RCE gadgets inside glibc for shell-popping exploits.", u:"https://github.com/david942j/one_gadget"},
+      {n:"libc-database", d:"Searchable database of glibc versions and symbol offsets, used to identify a target's exact libc.", u:"https://github.com/niklasb/libc-database"},
+      {n:"angr", d:"Binary analysis framework capable of symbolic execution — useful for solving crackme-style constraints.", u:"https://angr.io/"},
+      {n:"seccomp-tools", d:"Inspects and dumps a binary's seccomp sandbox rules, common in 'escape the sandbox' pwn challenges.", u:"https://github.com/david942j/seccomp-tools"},
+      {n:"heap-viewer / gdb heap tools", d:"pwndbg/GEF extensions for visualizing glibc heap chunks during heap-exploitation challenges.", u:"https://github.com/pwndbg/pwndbg"},
+      {n:"patchelf", d:"Modifies an ELF binary's interpreter or RPATH — used to force it to run against a specific libc.", u:"https://github.com/NixOS/patchelf"}
+    ]
+  },
+  {
+    key: "osint", title: "OSINT & recon", role: "open-source investigation and general recon",
+    tools: [
+      {n:"Maltego", d:"Link-analysis tool for visually mapping relationships between people, domains, and infrastructure.", u:"https://www.maltego.com/downloads/"},
+      {n:"theHarvester", d:"Gathers emails, subdomains, and hosts from public sources for a given domain or organization.", u:"https://github.com/laramies/theHarvester"},
+      {n:"Shodan", d:"Search engine for internet-connected devices and exposed services — useful for recon-style challenges.", u:"https://www.shodan.io/"},
+      {n:"Sublist3r", d:"Enumerates subdomains of a target domain using search engines and OSINT sources.", u:"https://github.com/aboul3la/Sublist3r"},
+      {n:"SpiderFoot", d:"Automates OSINT collection across dozens of data sources and correlates the results.", u:"https://github.com/smicallef/spiderfoot"},
+      {n:"ExifTool", d:"Also useful here — metadata in images and documents is a classic OSINT lead.", u:"https://exiftool.org/"},
+      {n:"Wayback Machine", d:"Historical snapshots of web pages, often used to recover deleted or changed content.", u:"https://web.archive.org/"},
+      {n:"Recon-ng", d:"Modular web-reconnaissance framework for automating the OSINT-gathering workflow.", u:"https://github.com/lanmaster53/recon-ng"},
+      {n:"Google/Bing dorking", d:"Advanced search operators for surfacing exposed files, login pages, and misconfigurations indexed by search engines.", u:"https://www.exploit-db.com/google-hacking-database"},
+      {n:"Have I Been Pwned", d:"Checks whether an email or credential has appeared in a known public breach.", u:"https://haveibeenpwned.com/"}
+    ]
+  },
+  {
+    key: "network", title: "Network & recon", role: "mapping hosts, ports, and services before you attack them",
+    tools: [
+      {n:"nmap", d:"The standard port scanner and service/version fingerprinting tool — usually the very first command run against a target.", u:"https://nmap.org/download.html"},
+      {n:"Masscan", d:"Extremely fast port scanner built for scanning very large ranges in a fraction of nmap's time.", u:"https://github.com/robertdavidgraham/masscan"},
+      {n:"Netcat / ncat", d:"Raw TCP/UDP swiss-army-knife for banner grabbing, port listening, and simple reverse shells.", u:"https://nmap.org/ncat/"},
+      {n:"tcpdump", d:"Command-line packet capture tool, useful when a GUI like Wireshark isn't available.", u:"https://www.tcpdump.org/"},
+      {n:"THC Hydra", d:"Rapid network login brute-forcer supporting dozens of protocols (SSH, FTP, HTTP forms, SMB, and more).", u:"https://github.com/vanhauser-thc/thc-hydra"},
+      {n:"RouterSploit", d:"Exploitation framework focused on embedded and networked devices such as routers and cameras.", u:"https://github.com/threat9/routersploit"}
+    ]
+  },
+  {
+    key: "mobile", title: "Mobile & hardware", role: "Android/iOS apps and embedded/IoT challenges",
+    tools: [
+      {n:"jadx", d:"Decompiles Android APK/DEX files into readable Java — also listed under reverse engineering.", u:"https://github.com/skylot/jadx"},
+      {n:"MobSF", d:"Automated mobile app security testing framework for Android and iOS binaries.", u:"https://github.com/MobSF/Mobile-Security-Framework-MobSF"},
+      {n:"apktool", d:"Decodes and rebuilds Android APK resources, useful for patching or inspecting app internals.", u:"https://apktool.org/"},
+      {n:"Frida", d:"Also core to mobile work — hooks into a running app to bypass checks or dump runtime data.", u:"https://frida.re/"},
+      {n:"Objection", d:"Runtime mobile exploration toolkit built on Frida, aimed at bypassing SSL pinning and root/jailbreak checks.", u:"https://github.com/sensepost/objection"},
+      {n:"binwalk", d:"Also used here to unpack firmware images from routers, IoT devices, and embedded systems.", u:"https://github.com/ReFirmLabs/binwalk"},
+      {n:"Ghidra", d:"Also used for firmware/embedded reverse engineering across ARM, MIPS, and other non-x86 architectures.", u:"https://ghidra-sre.org/"}
+    ]
+  },
+  {
+    key: "practice", title: "Practice targets", role: "deliberately vulnerable apps and labs to train on",
+    tools: [
+      {n:"OWASP Juice Shop", d:"Modern, deliberately insecure web app covering the OWASP Top 10 — the most popular free web-security practice target.", u:"https://github.com/juice-shop/juice-shop"},
+      {n:"Damn Vulnerable Web App (DVWA)", d:"PHP/MySQL app with adjustable difficulty levels across classic web vulnerability classes.", u:"https://github.com/digininja/DVWA"},
+      {n:"PicoCTF", d:"Beginner-friendly, always-available CTF platform run by Carnegie Mellon, great for first-timers.", u:"https://picoctf.org/"},
+      {n:"HackTheBox", d:"Subscription/free-tier platform with CTF challenges and full vulnerable machines to practice on.", u:"https://www.hackthebox.com/"},
+      {n:"TryHackMe", d:"Guided, beginner-friendly rooms covering every CTF category with structured learning paths.", u:"https://tryhackme.com/"},
+      {n:"pwnable.kr / pwnable.tw", d:"Long-running binary exploitation wargames ranging from beginner to advanced pwn challenges.", u:"https://pwnable.kr/"},
+      {n:"CryptoHack", d:"Gamified platform purely for learning and practicing cryptography attacks.", u:"https://cryptohack.org/"}
+    ]
+  },
+  {
+    key: "learn", title: "Learning & references", role: "background reading, cheat sheets, and writeups",
+    tools: [
+      {n:"CTFtime", d:"Team ratings, event calendar, and archived writeup links for past competitions.", u:"https://ctftime.org/"},
+      {n:"awesome-ctf", d:"Community-curated master list of CTF frameworks, tools, and resources on GitHub.", u:"https://github.com/apsdehal/awesome-ctf"},
+      {n:"GTFOBins", d:"Reference of Unix binaries that can be abused to bypass restricted shells during privilege escalation.", u:"https://gtfobins.github.io/"},
+      {n:"HackTricks", d:"Extensive wiki of pentesting and CTF techniques organized by attack surface and technology.", u:"https://book.hacktricks.xyz/"},
+      {n:"PayloadsAllTheThings", d:"Enormous reference collection of payloads and bypass techniques across almost every vulnerability class.", u:"https://github.com/swisskyrepo/PayloadsAllTheThings"}
+    ]
+  }
+];
+const drawersEl = document.getElementById('drawers');
+const cardlistEl = document.getElementById('cardlist');
+const titleEl = document.getElementById('section-title');
+const roleEl = document.getElementById('section-role');
+const searchEl = document.getElementById('search');
+
+let activeFilter = "all";
+
+function buildDrawers(){
+  const totalCount = DATA.reduce((sum,c)=>sum+c.tools.length,0);
+  const allBtn = document.createElement('button');
+  allBtn.className = 'drawer active';
+  allBtn.dataset.filter = 'all';
+  allBtn.innerHTML = `All entries <span class="count">${totalCount}</span>`;
+  drawersEl.appendChild(allBtn);
+
+  DATA.forEach(cat=>{
+    const btn = document.createElement('button');
+    btn.className = 'drawer';
+    btn.dataset.filter = cat.key;
+    btn.innerHTML = `${cat.title} <span class="count">${cat.tools.length}</span>`;
+    drawersEl.appendChild(btn);
+  });
+
+  drawersEl.querySelectorAll('.drawer').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      drawersEl.querySelectorAll('.drawer').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.filter;
+      render();
+    });
+  });
+}
+
+function render(){
+  const query = searchEl.value.trim().toLowerCase();
+  cardlistEl.innerHTML = "";
+
+  let cats = DATA;
+  if(activeFilter !== "all"){
+    cats = DATA.filter(c=>c.key === activeFilter);
+    titleEl.textContent = cats[0].title;
+    roleEl.textContent = cats[0].role;
+  } else {
+    titleEl.textContent = "All entries";
+    roleEl.textContent = "every tool in the index";
+  }
+
+  let entryNum = 1;
+  let shown = 0;
+
+  cats.forEach(cat=>{
+    cat.tools.forEach(t=>{
+      const hay = (t.n + " " + t.d + " " + cat.title).toLowerCase();
+      if(query && !hay.includes(query)) return;
+      shown++;
+      const row = document.createElement('div');
+      row.className = 'index-card';
+      row.innerHTML = `
+        <div class="num">${String(entryNum).padStart(3,'0')}</div>
+        <div>
+          <h3>${t.n}</h3>${activeFilter === 'all' ? `<span class="cat-tag">${cat.title}</span>` : ''}
+          <p>${t.d}</p>
+        </div>
+        <a class="go" href="${t.u}" target="_blank" rel="noopener">visit site →</a>
+      `;
+      cardlistEl.appendChild(row);
+      entryNum++;
+    });
+  });
+
+  if(shown === 0){
+    cardlistEl.innerHTML = `<div class="empty">No entries match "${query}" in this drawer.</div>`;
+  }
+}
+
+searchEl.addEventListener('input', render);
+
+buildDrawers();
+render();
+</script>
+</body>
+</html>
